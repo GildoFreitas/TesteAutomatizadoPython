@@ -26,7 +26,8 @@ Antes de rodar o teste, verifique se possui:
 
 ## Executando o Teste
 
-Execute no terminal:
+Via terminal, acesse o pasta "Questão 01" e execute:
 - pytest test_amazon.py
+
 Por padrão, está com o headless setado como False para acompanhar a execução do teste.
 
