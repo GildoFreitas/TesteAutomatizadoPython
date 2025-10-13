@@ -5,8 +5,7 @@ from playwright.sync_api import sync_playwright, expect
 @pytest.fixture(scope="session")
 def browser_context():
     """
-    Abre o navegador apenas uma vez por sessão de teste.
-    Usa o Playwright em modo síncrono para simplificar a execução.
+    Abre o navegador apenas uma vez por sessão de teste e usa o Playwright em modo para simplificar a execução.
     """
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False, slow_mo=100)
@@ -19,8 +18,7 @@ def browser_context():
 @pytest.fixture
 def page(browser_context):
     """
-    Cria uma nova aba limpa antes de cada teste.
-    Fecha a aba ao final.
+    Cria uma nova aba e fecha a aba ao final.
     """
     page = browser_context.new_page()
     yield page
@@ -29,12 +27,12 @@ def page(browser_context):
 #Teste para adicionar livro ao carrinho
 def test_amazon(page):
     """
-    Caso de Teste: adicionar o livro 'AI Engineering: Building Applications with Foundation Models'
-    ao carrinho da Amazon Brasil e validar mensagem de sucesso.
+    Caso de Teste: adicionar o livro 'AI Engineering: Building Applications with Foundation Models' ao carrinho da Amazon Brasil e validar mensagem de sucesso.
     """
-
     #Acessando a página inicial da Amazon
     page.goto("https://www.amazon.com.br/")
+    titulo = page.title()
+    assert "Amazon.com.br" in titulo, f"Título inesperado: {titulo}"
 
     #Clicando no campo de pesquisa, colocando o nome "AI Engineering: Building Applications with Foundation Models" e clicando para pesquisar
     search_box = page.get_by_role("searchbox", name="Pesquisar Amazon.com.br")
@@ -45,18 +43,31 @@ def test_amazon(page):
     #Clicando no link do livro
     page.get_by_role("link", name="AI Engineering: Building Applications with Foundation Models").click()
 
-    #Conferindo o autor e o idioma
-    edition_info = page.get_by_text("Edição Inglês por Chip Huyen", exact=False)
+    #Conferindo o autor
+    autor_livro = page.get_by_text("Edição Inglês por Chip Huyen", exact=False)
+    expect(autor_livro).to_be_visible()
+    assert "Chip Huyen" in autor_livro.inner_text(), "O autor não é Chip Huyen!"
+
+    #Conferindo o autor
+    idioma_livro = page.get_by_text("Edição Inglês por Chip Huyen", exact=False)
+    expect(idioma_livro).to_be_visible()
+    assert "Inglês" in autor_livro.inner_text(), "O idioma não é inglês!"
 
     #Conferindo se é livro físico
-    expect(page.get_by_role("button", name="Outros Novo a partir de R$")).to_be_visible()
+    livro_fisico = page.get_by_role("radio", name="Capa Comum Formato: R$")
+    expect(livro_fisico).to_be_visible()
+    assert "Capa Comum" in livro_fisico.inner_text(), "O livro não é físico"
 
     #Conferindo se é novo
-    expect(page.get_by_role("button", name="Outros Novo a partir de R$")).to_be_visible()
+    livro_novo = page.get_by_role("button", name="Outros Novo a partir de R$")
+    expect(livro_novo).to_be_visible()
+    assert "Novo" in livro_novo.inner_text(), "O livro não é novo"
 
     #Clicando no botão de adicionar ao carrinho e conferindo a mensagem
     page.get_by_role("button", name="Adicionar ao carrinho", exact=True).click()
-    expect(page.get_by_role("heading", name="Adicionado ao carrinho")).to_be_visible()
+    adicionado_carrinho = page.get_by_role("heading", name="Adicionado ao carrinho")
+    expect(adicionado_carrinho).to_be_visible()
+    assert "Adicionado ao carrinho" in adicionado_carrinho.inner_text(), "O livro não foi adicionado no carrinho"
 
 
 
