@@ -20,7 +20,7 @@ Antes de rodar o teste, verifique se possui:
 
 ## Instalação
 
-- Para rodar os testes, é necessário clonar o repositório: https://github.com/GildoFreitas/DotTesteTecnico.git
+- Para rodar os testes, é necessário clonar o repositório: [https://github.com/GildoFreitas/DotTesteTecnico.git](https://github.com/GildoFreitas/TesteAutomatizadoPython.git)
 - Instalar as dependências, via linha de comando pode utilizar: pip install pytest playwright
 - Baixar os navegadores utilizados pelo Playwright, via linha de comando pode utilizar: playwright install
 
