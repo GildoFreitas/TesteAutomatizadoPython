@@ -33,16 +33,13 @@ jobs:
           pip install -r requirements.txt      # instala as dependências listadas
           playwright install --with-deps       # instala navegadores e dependências do Playwright
 
-      #Como com o modo headless não está funcionando, essa configuração simula uma tela dentro do github actions
-      - name: Inicia um display virtual (Xvfb)
+      #Executa os testes de UI com uma tela virtual dentro do GitHub Actions
+      - name: Executar testes de UI (modo headless)
         run: |
+          sudo apt-get update
           sudo apt-get install -y xvfb
           Xvfb :99 -screen 0 1920x1080x24 &
           export DISPLAY=:99
-
-      #Executa os testes de UI (em modo headless, sem abrir navegador)
-      - name: Executar testes de UI (modo headless)
-        run: |
           cd "Questão 01"
           pytest -v --maxfail=1     # executa os testes e para no primeiro erro
 
