@@ -1,33 +1,31 @@
 # Nome do pipeline que aparece na aba "Actions" do GitHub
 name: Testes Automatizados - UI e API
 
-# Define quando o pipeline será executado
+# Define quando o pipeline será executado, que nesse caso será na branch main e no push e pull
 on:
-  push:                      # Quando houver push no repositório
-    branches: [ main, master ]   # Apenas nas branches main ou master
-  pull_request:              # Também roda para pull requests
-    branches: [ main, master ]
+  push:
+    branches: [ main]
+  pull_request:
+    branches: [ main]
 
-# ===============================================
-# JOB 1 - TESTES DE INTERFACE (Playwright)
-# ===============================================
+# TESTES DE INTERFACE (Playwright) - Amazon
 jobs:
   ui-tests:
     name: Testes de UI - Questão 01
     runs-on: ubuntu-latest   # Usa uma máquina virtual Linux como runner
 
     steps:
-      # 1️⃣ Faz checkout do código do repositório
+      #Faz checkout do código do repositório
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # 2️⃣ Configura o ambiente Python na versão 3.10
+      #Configura o ambiente Python na versão 3.10
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      # 3️⃣ Instala dependências do projeto da pasta "Questão 01"
+      #Instala dependências do projeto da pasta "Questão 01"
       - name: Instalar dependências
         run: |
           cd "Questão 01"                      # entra na pasta da automação de UI
@@ -35,53 +33,51 @@ jobs:
           pip install -r requirements.txt      # instala as dependências listadas
           playwright install --with-deps       # instala navegadores e dependências do Playwright
 
-      # 4️⃣ Executa os testes de UI (em modo headless, sem abrir navegador)
+      #Executa os testes de UI (em modo headless, sem abrir navegador)
       - name: Executar testes de UI (modo headless)
         run: |
           cd "Questão 01"
           pytest -v --headless --maxfail=1     # executa os testes e para no primeiro erro
 
-      # 5️⃣ Se os testes falharem, faz upload das capturas de tela (screenshots)
+      #Se os testes falharem, faz upload das capturas de tela (screenshots)
       - name: Upload de screenshots (se falhar)
-        if: failure()                          # executa apenas se o job falhar
+        if: failure()                          # executa se o job falhar
         uses: actions/upload-artifact@v4
         with:
           name: screenshots-ui                 # nome do artefato no GitHub
           path: "Questão 01/test-results/"     # caminho dos screenshots
 
-# ===============================================
 # JOB 2 - TESTES DE API (Requests + Pytest)
-# ===============================================
   api-tests:
     name: Testes de API - Questão 02
     runs-on: ubuntu-latest
     needs: ui-tests             # só roda depois dos testes de UI (dependência opcional)
 
     steps:
-      # 1️⃣ Faz checkout do código
+      #Faz checkout do código
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # 2️⃣ Configura o ambiente Python
+      #Configura o ambiente Python
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      # 3️⃣ Instala dependências específicas da pasta "Questão 02"
+      #Instala dependências específicas da pasta "Questão 02"
       - name: Instalar dependências
         run: |
           cd "Questão 02"
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4️⃣ Executa os testes de API
+      #Executa os testes de API
       - name: Executar testes de API
         run: |
           cd "Questão 02"
           pytest -v --tb=short --maxfail=1     # modo verboso com traceback curto
 
-      # 5️⃣ (Opcional) Faz upload do relatório HTML ou logs dos testes
+      #Faz upload do relatório HTML ou logs dos testes
       - name: Upload de relatório de API
         if: always()                          # executa mesmo se falhar
         uses: actions/upload-artifact@v4
