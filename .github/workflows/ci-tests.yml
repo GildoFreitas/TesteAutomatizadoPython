@@ -37,7 +37,7 @@ jobs:
       - name: Executar testes de UI (modo headless)
         run: |
           cd "Questão 01"
-          pytest -v --headless --maxfail=1     # executa os testes e para no primeiro erro
+          pytest -v --maxfail=1     # executa os testes e para no primeiro erro
 
       #Se os testes falharem, faz upload das capturas de tela (screenshots)
       - name: Upload de screenshots (se falhar)
