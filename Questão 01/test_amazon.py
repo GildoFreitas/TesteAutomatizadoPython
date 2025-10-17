@@ -48,7 +48,7 @@ def test_amazon(page):
     expect(autor_livro).to_be_visible()
     assert "Chip Huyen" in autor_livro.inner_text(), "O autor não é Chip Huyen!"
 
-    #Conferindo o autor
+    #Conferindo o idioma
     idioma_livro = page.get_by_text("Edição Inglês por Chip Huyen", exact=False)
     expect(idioma_livro).to_be_visible()
     assert "Inglês" in autor_livro.inner_text(), "O idioma não é inglês!"
