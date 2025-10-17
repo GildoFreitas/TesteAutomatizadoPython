@@ -1,4 +1,4 @@
-**Esse projeto contem as respostas das 4 questões do teste**
+**Esse projeto contem uma automação de testes de interface de usuário e outra de uma API junto com uma integração continua no GitHub Actions**
 
 Na pasta "Questão 01", contém um teste automatizado usando **Playwright com Python** onde acessa o site da amazon e adiciona um livro no carrinho.
 
